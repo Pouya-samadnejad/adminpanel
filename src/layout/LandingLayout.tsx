@@ -1,4 +1,5 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Outlet } from "react-router-dom";
 
 const { Header, Content, Footer } = Layout;
 
@@ -42,7 +43,7 @@ function LandingLayout() {
             borderRadius: borderRadiusLG,
           }}
         >
-          محتوا
+          <Outlet />
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>

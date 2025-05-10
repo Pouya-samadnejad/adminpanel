@@ -1,6 +1,7 @@
+import type React from "react";
 import { Outlet } from "react-router-dom";
 
-function LoginLayout() {
+const LoginLayout: React.FC = () => {
   return (
     <div className="h-screen w-full flex items-center justify-between">
       <div className="mx-auto">
@@ -8,6 +9,6 @@ function LoginLayout() {
       </div>
     </div>
   );
-}
+};
 
 export default LoginLayout;

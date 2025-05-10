@@ -1,6 +1,7 @@
 import { Button, Result } from "antd";
+import type React from "react";
 
-function ErrorLayout() {
+const ErrorLayout: React.FC = () => {
   return (
     <div className="h-screen w-full flex items-center justify-between">
       <div className="mx-auto ">
@@ -13,6 +14,6 @@ function ErrorLayout() {
       </div>
     </div>
   );
-}
+};
 
 export default ErrorLayout;

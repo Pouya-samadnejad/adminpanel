@@ -9,7 +9,7 @@ const items = [
   { key: 3, label: "پنل کاربری" },
 ];
 
-function LandingLayout() {
+const LandingLayout: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -51,6 +51,6 @@ function LandingLayout() {
       </Footer>
     </Layout>
   );
-}
+};
 
 export default LandingLayout;

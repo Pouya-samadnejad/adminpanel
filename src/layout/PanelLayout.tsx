@@ -6,43 +6,40 @@ import IndexSideBar from "../pages/panel/indexSideBar";
 
 const { Content, Sider } = Layout;
 
-function PanelLayout() {
-  const [open, setOpen] = useState(false);
+const PanelLayout: React.FC = () => {
+  const [open, setOpen] = useState<boolean>(false);
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
+  const showDrawer = () => setOpen(true);
+  const onClose = () => setOpen(false);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   return (
-    <Layout className="h-screen ">
+    <Layout className="h-screen">
       <Layout>
         <Drawer onClose={onClose} open={open}>
           <IndexSideBar />
         </Drawer>
+
         <Sider
           width={200}
           breakpoint="lg"
           style={{ background: colorBgContainer }}
-          className="hidden md:block "
+          className="hidden md:block"
         >
           <Space
             direction="vertical"
             size={16}
             align="center"
-            className=" w-full mx-auto py-4"
+            className="w-full mx-auto py-4"
           >
             <Avatar size={64} icon={<UserOutlined />} />
           </Space>
           <IndexSideBar />
         </Sider>
+
         <Layout className="!px-4 !pb-3 !md:px-6 !md:pb-4">
           <div className="flex items-center">
             <div className="md:hidden mt-2.5 mx-4 mb-4">
@@ -50,6 +47,7 @@ function PanelLayout() {
                 <UserOutlined />
               </Button>
             </div>
+
             <Breadcrumb
               items={[
                 { title: "خانه" },
@@ -59,6 +57,7 @@ function PanelLayout() {
               style={{ margin: "16px 0" }}
             />
           </div>
+
           <Content
             style={{
               padding: 24,
@@ -74,6 +73,6 @@ function PanelLayout() {
       </Layout>
     </Layout>
   );
-}
+};
 
 export default PanelLayout;

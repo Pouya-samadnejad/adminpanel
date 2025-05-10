@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import LandingLayout from "../layout/LandingLayout";
 import Loading from "../components/common/loading";
 const Form = lazy(() => import("../components/common/Form"));
+
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -13,7 +14,7 @@ export const Landingroutes = {
   path: "/",
   children: [
     {
-      path: "app",
+      path: "",
       index: true,
       element: (
         <SuspenseWrapper>

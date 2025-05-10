@@ -1,12 +1,11 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Outlet } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 const items = [
-  { key: 1, label: "ورود" },
-  { key: 2, label: "ثبت نام" },
-  { key: 3, label: "پنل کاربری" },
+  { key: "1", label: <Link to="/login">ورود</Link> },
+  { key: "3", label: <Link to="/panel">پنل کاربری</Link> },
 ];
 
 const LandingLayout: React.FC = () => {

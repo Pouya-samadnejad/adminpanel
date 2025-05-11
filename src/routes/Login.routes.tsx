@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import Loading from "../components/common/loading";
+import Loading from "../components/common/Loading";
 import LoginLayout from "../layout/LoginLayout";
 const Form = lazy(() => import("../components/common/Form"));
 

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Drawer, Layout, theme, Avatar, Space } from "antd";
 import { Outlet } from "react-router-dom";
-import IndexSideBar from "../pages/panel/indexSideBar";
-
+import IndexSideBar from "../pages/panel/IndexSideBar";
+import { Link } from "react-router-dom";
 const { Content, Sider } = Layout;
 
 const PanelLayout: React.FC = () => {
@@ -38,6 +38,12 @@ const PanelLayout: React.FC = () => {
             <Avatar size={64} icon={<UserOutlined />} />
           </Space>
           <IndexSideBar />
+          <div className="px-4 flex items-center gap-2 mt-1 bg-red-300 transition-all mx-1 py rounded-2xl py-2 ">
+            <ArrowLeftOutlined />
+            <Link to="/" className="text-black">
+              بازگشت
+            </Link>
+          </div>
         </Sider>
 
         <Layout className="!px-4 !pb-3 !md:px-6 !md:pb-4">

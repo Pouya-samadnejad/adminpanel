@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { ArrowLeftOutlined, UserOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Drawer, Layout, theme, Avatar, Space } from "antd";
+import { Breadcrumb, Button, Drawer, Layout, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import IndexSideBar from "../pages/panel/IndexSideBar";
 import { Link } from "react-router-dom";
+import { useAxiosInterceptor } from "../utils/api";
+import UserSection from "../pages/panel/UserSection";
 const { Content, Sider } = Layout;
 
 const PanelLayout: React.FC = () => {
+  useAxiosInterceptor();
   const [open, setOpen] = useState<boolean>(false);
 
   const showDrawer = () => setOpen(true);
   const onClose = () => setOpen(false);
-
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -29,21 +31,8 @@ const PanelLayout: React.FC = () => {
           style={{ background: colorBgContainer }}
           className="hidden md:block"
         >
-          <Space
-            direction="vertical"
-            size={16}
-            align="center"
-            className="w-full mx-auto py-4"
-          >
-            <Avatar size={64} icon={<UserOutlined />} />
-          </Space>
+          <UserSection />
           <IndexSideBar />
-          <div className="px-4 flex items-center gap-2 mt-1 bg-red-300 transition-all mx-1 py rounded-2xl py-2 ">
-            <ArrowLeftOutlined />
-            <Link to="/" className="text-black">
-              بازگشت
-            </Link>
-          </div>
         </Sider>
 
         <Layout className="!px-4 !pb-3 !md:px-6 !md:pb-4">

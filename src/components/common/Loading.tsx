@@ -1,11 +1,12 @@
 import React from "react";
+import { Spin } from "antd";
 
-const Loading: React.FC = () => {
-  return (
-    <div>
-      <h1>در حال بارگذاری</h1>
+const App: React.FC = () => (
+  <div className="h-screen w-full flex items-center justify-between">
+    <div className="mx-auto">
+      <Spin />
     </div>
-  );
-};
+  </div>
+);
 
-export default Loading;
+export default App;

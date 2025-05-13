@@ -1,6 +1,6 @@
 import api from "../utils/api";
 
-const getCurrentUser = () => {
+export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
     api
       .get("/v1/user/getcurrentuser")
@@ -13,4 +13,3 @@ const getCurrentUser = () => {
   });
 };
 
-export default getCurrentUser;

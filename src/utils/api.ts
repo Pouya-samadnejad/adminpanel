@@ -21,13 +21,16 @@ export const useAxiosInterceptor = () => {
 
         switch (status) {
           case 403:
-            navigate("/forbidden");
+            navigate("forbidden");
             break;
           case 404:
             navigate("/not-found");
             break;
           case 500:
-            navigate("/server-error");
+            navigate("server-error");
+            break;
+          case 503:
+            navigate("server-error");
             break;
           case 401:
             localStorage.removeItem("access_token");

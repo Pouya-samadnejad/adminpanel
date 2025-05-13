@@ -14,7 +14,7 @@ export const Landingroutes = {
   path: "/",
   children: [
     {
-      path: "",
+      path: "landing",
       index: true,
       element: (
         <SuspenseWrapper>

@@ -1,21 +1,14 @@
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes/routes";
 import { useEffect } from "react";
-import getCurrentUser from "./services/user";
-import { UserProvider } from "./store/context/useCurrentUser";
+import { getCurrentUser } from "./services/user";
 
 const App: React.FC = () => {
   useEffect(() => {
     getCurrentUser();
   });
 
-  return (
-    <>
-      <UserProvider>
-        <RouterProvider router={routes} />;
-      </UserProvider>
-    </>
-  );
+  return <RouterProvider router={routes} />;
 };
 
 export default App;

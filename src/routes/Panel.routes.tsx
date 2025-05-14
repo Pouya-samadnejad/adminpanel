@@ -17,7 +17,18 @@ export const PanelRoutes = {
       path: "panel",
       element: (
         <SuspenseWrapper>
-          <TableSection />
+          <TableSection
+            titleNames={[
+              { key: "firstName", label: "نام" },
+              { key: "lastName", label: "نام خانوادگی" },
+              { key: "nationalCode", label: "کد ملی" },
+              { key: "userName", label: " نام کاربری" },
+              { key: "status", label: "وضعیت کاربران" },
+              { key: "twoFactorEnabled", label: "تایید دو مرحله ای" },
+              { key: "type", label: "نوع کاربر" },
+              { key: "action", label: "عملیات" },
+            ]}
+          />
         </SuspenseWrapper>
       ),
     },

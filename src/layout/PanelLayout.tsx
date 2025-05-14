@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import IndexSideBar from "../pages/panel/IndexSideBar";
 import { Link } from "react-router-dom";
 import { useAxiosInterceptor } from "../utils/api";
-import UserSection from "../pages/panel/UserSection";
+import UserSection from "../components/common/panel/UserSection";
 const { Content, Sider } = Layout;
 
 const PanelLayout: React.FC = () => {
@@ -19,7 +19,7 @@ const PanelLayout: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout className="h-screen">
+    <Layout>
       <Layout>
         <Drawer onClose={onClose} open={open}>
           <IndexSideBar />
@@ -29,7 +29,7 @@ const PanelLayout: React.FC = () => {
           width={200}
           breakpoint="lg"
           style={{ background: colorBgContainer }}
-          className="hidden md:block"
+          className="hidden md:block h-screen"
         >
           <UserSection />
           <IndexSideBar />

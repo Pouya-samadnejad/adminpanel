@@ -1,7 +1,7 @@
 import { Avatar, Space } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { useCurrentUser } from "../../store/context/useCurrentUser";
-import Loading from "../../components/common/Loading";
+import { useCurrentUser } from "../../../store/context/useCurrentUser";
+import Loading from "../Loading";
 
 const UserSection: React.FC = () => {
   const { currentUser, loading } = useCurrentUser();

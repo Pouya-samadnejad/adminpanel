@@ -12,6 +12,7 @@ interface TableSectionProps {
 const TableSection: React.FC<TableSectionProps> = ({ titleNames }) => {
   const [datasource, setDatasource] = useState<any[]>([]);
   const [pageParams, setPageParams] = useSearchParams();
+<<<<<<< HEAD
   const page = Number(pageParams.get("page") || 1);
 
   const [numTable, setNumtable] = useState<number>(5);
@@ -20,6 +21,18 @@ const TableSection: React.FC<TableSectionProps> = ({ titleNames }) => {
 
   const totalPage = Math.ceil(datasource.length / pageSize);
 
+=======
+  const page = Number(pageParams.get("page") || 1); // صفحه جاری را از URL می‌خوانیم
+
+  const [numTable, setNumtable] = useState<number>(5); // تعداد ردیف‌های هر صفحه
+
+  const pageSize = numTable;
+
+  // محاسبه تعداد صفحات بر اساس داده‌های فعلی (slicedUsers)
+  const totalPage = Math.ceil(datasource.length / pageSize);
+
+  // برش داده‌ها برای نمایش در صفحه
+>>>>>>> 5736402e3e3a3c880b24fe2463df695ba914b235
   const slicedUsers = datasource.slice((page - 1) * pageSize, page * pageSize);
 
   useEffect(() => {

@@ -1,14 +1,16 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-
+import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAxiosInterceptor } from "../utils/api";
 const { Header, Content, Footer } = Layout;
 
 const items = [
-  { key: 1, label: "ورود" },
-  { key: 2, label: "ثبت نام" },
-  { key: 3, label: "پنل کاربری" },
+  { key: "1", label: <Link to="/login">ورود</Link> },
+  { key: "3", label: <Link to="/panel">پنل کاربری</Link> },
 ];
 
-function LandingLayout() {
+const LandingLayout: React.FC = () => {
+  useAxiosInterceptor();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -42,7 +44,7 @@ function LandingLayout() {
             borderRadius: borderRadiusLG,
           }}
         >
-          محتوا
+          <Outlet />
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
@@ -50,6 +52,6 @@ function LandingLayout() {
       </Footer>
     </Layout>
   );
-}
+};
 
 export default LandingLayout;

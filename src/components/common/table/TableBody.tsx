@@ -1,5 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
 import Action from "./cells/Action";
+=======
+import Action from "./Action";
+>>>>>>> 5736402e3e3a3c880b24fe2463df695ba914b235
 
 interface TableBodyProps {
   columns: any[];

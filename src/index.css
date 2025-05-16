@@ -1,15 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Vazirmatn:wght@100..900&display=swap");
 @import "tailwindcss";
-
+@import "../public/assets/fonts/fontFace.css";
 body {
   height: 100vh;
   margin: 0;
 }
 
-@theme {
-  --font-sans: "Vazirmatn", serifsans;
-}
-
 * {
-  font-family: "Vazirmatn", serifsans;
+  font-family: "IRANYekanXFaNum", serifsans;
+  direction: rtl;
 }

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { ArrowLeftOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Drawer, Layout, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import IndexSideBar from "../pages/panel/IndexSideBar";
-import { Link } from "react-router-dom";
-import { useAxiosInterceptor } from "../utils/api";
 import UserSection from "../components/common/panel/UserSection";
 const { Content, Sider } = Layout;
 
 const PanelLayout: React.FC = () => {
-  useAxiosInterceptor();
   const [open, setOpen] = useState<boolean>(false);
 
   const showDrawer = () => setOpen(true);

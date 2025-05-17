@@ -1,8 +1,7 @@
 import { lazy, Suspense } from "react";
 import PanelLayout from "../layout/PanelLayout";
 import Loading from "../components/common/Loading";
-import TableSection from "../components/common/table/TableSection";
-
+const IndexUsers = lazy(() => import("../pages/panel/IndexUsers"));
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -10,25 +9,30 @@ const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const PanelRoutes = {
-  path: "/",
+  path: "/panel",
   element: <PanelLayout />,
   children: [
     {
-      path: "panel",
+      path: "users",
       element: (
         <SuspenseWrapper>
-          <TableSection
-            titleNames={[
-              { key: "firstName", label: "نام" },
-              { key: "lastName", label: "نام خانوادگی" },
-              { key: "nationalCode", label: "کد ملی" },
-              { key: "userName", label: " نام کاربری" },
-              { key: "status", label: "وضعیت کاربران" },
-              { key: "twoFactorEnabled", label: "تایید دو مرحله ای" },
-              { key: "type", label: "نوع کاربر" },
-              { key: "action", label: "عملیات" },
-            ]}
-          />
+          <IndexUsers />
+        </SuspenseWrapper>
+      ),
+    },
+    {
+      path: "applications",
+      element: (
+        <SuspenseWrapper>
+          <div>سامانه ها</div>
+        </SuspenseWrapper>
+      ),
+    },
+    {
+      path: "loginLogs",
+      element: (
+        <SuspenseWrapper>
+          <div>نشست ها</div>
         </SuspenseWrapper>
       ),
     },

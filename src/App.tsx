@@ -7,11 +7,15 @@ import { ConfigProvider } from "antd";
 const App: React.FC = () => {
   useEffect(() => {
     getCurrentUser();
-  }, []); // به صورت صحیح useEffect را تنظیم کردیم
+  }, []);
 
   return (
     <ConfigProvider direction="rtl" locale={{ locale: "fa_IR" }}>
-      <div>
+      <div
+        style={{
+          fontFamily: "IRANYekanXFaNum, Tahoma, Arial, sans-serif ",
+        }}
+      >
         <RouterProvider router={routes} />
       </div>
     </ConfigProvider>

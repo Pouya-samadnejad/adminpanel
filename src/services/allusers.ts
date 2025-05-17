@@ -1,11 +1,12 @@
 import api from "../utils/api";
 
-const getUsers = (PageSize: number, PageIndex: number) => {
+const getUsers = (pageIndex, pageSize, search) => {
   return api
     .get("v1/User/GetAllByFilter", {
       params: {
-        PageSize: 21,
-        PageIndex,
+        pageSize,
+        pageIndex,
+        search,
       },
     })
     .then((res) => res.data);

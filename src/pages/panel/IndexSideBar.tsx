@@ -1,36 +1,34 @@
 import { Menu } from "antd";
 import React from "react";
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import type { MenuProps } from "antd";
+import type { MenuItemGroupProps } from "antd/es/menu";
+import { useNavigate } from "react-router-dom";
 
-const items2: MenuProps["items"] = [
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-].map((icon, index) => {
-  const key = String(index + 1);
-
-  return {
-    key: `ساب${key}`,
-    icon: React.createElement(icon),
-    label: `ساب منو ${key}`,
-    children: Array.from({ length: 4 }).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `گزینه${subKey}`,
-      };
-    }),
-  };
-});
+const items: MenuItemGroupProps[] = [
+  {
+    key: "users",
+    icon: <i className="fal fa-user"></i>,
+    label: " کاربران",
+  },
+  {
+    key: "applications",
+    icon: <i className="fal fa-desktop"></i>,
+    label: " سامنه ها",
+  },
+  {
+    key: "loginLogs",
+    icon: <i className="fal fa-clock"></i>,
+    label: " نشست ها",
+  },
+];
 
 interface indexSideBarProps {}
 
 const IndexSideBar: React.FC<indexSideBarProps> = () => {
+  const navigate = useNavigate();
+  const clickhandler = (e) => {
+    navigate(`/panel/${e.key}`);
+  };
+
   return (
     <div>
       <Menu
@@ -38,7 +36,8 @@ const IndexSideBar: React.FC<indexSideBarProps> = () => {
         defaultSelectedKeys={["1"]}
         defaultOpenKeys={["sub1"]}
         style={{ height: "100%", borderRight: 0 }}
-        items={items2}
+        items={items}
+        onClick={clickhandler}
       />
     </div>
   );

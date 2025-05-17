@@ -1,7 +1,6 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useAxiosInterceptor } from "../utils/api";
 const { Header, Content, Footer } = Layout;
 
 const items = [
@@ -10,7 +9,6 @@ const items = [
 ];
 
 const LandingLayout: React.FC = () => {
-  useAxiosInterceptor();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

@@ -1,62 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import getUsers from "../../../services/allusers";
 import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Pagination, Select } from "antd";
+import SearchBar from "./SearchBar";
+import FilterSection from "./FilterSection";
 
-interface TableSectionProps {
-  titleNames: { label: string; key: string }[];
-}
+const TableSection = ({ titleNames }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-const TableSection: React.FC<TableSectionProps> = ({ titleNames }) => {
-  const [datasource, setDatasource] = useState<any[]>([]);
-  const [pageParams, setPageParams] = useSearchParams();
-<<<<<<< HEAD
-  const page = Number(pageParams.get("page") || 1);
+  const page = Number(searchParams.get("page") || 1);
+  const search = searchParams.get("search") || "";
+  const [pageSize, setPageSize] = useState(5);
 
-  const [numTable, setNumtable] = useState<number>(5);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["users", page, pageSize, search],
+    queryFn: () => getUsers(page, pageSize, search).then((res) => res.data),
+    keepPreviousData: true,
+  });
 
-  const pageSize = numTable;
+  const users = data?.items || [];
+  const totalCount = data?.totalCount || 0;
 
-  const totalPage = Math.ceil(datasource.length / pageSize);
-
-=======
-  const page = Number(pageParams.get("page") || 1); // صفحه جاری را از URL می‌خوانیم
-
-  const [numTable, setNumtable] = useState<number>(5); // تعداد ردیف‌های هر صفحه
-
-  const pageSize = numTable;
-
-  // محاسبه تعداد صفحات بر اساس داده‌های فعلی (slicedUsers)
-  const totalPage = Math.ceil(datasource.length / pageSize);
-
-  // برش داده‌ها برای نمایش در صفحه
->>>>>>> 5736402e3e3a3c880b24fe2463df695ba914b235
-  const slicedUsers = datasource.slice((page - 1) * pageSize, page * pageSize);
-
-  useEffect(() => {
-    getUsers()
-      .then((res) => {
-        const items = res?.data?.items;
-        setDatasource(items);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  const handleNumTable = (value: number) => {
-    setNumtable(value);
-    setPageParams((prev) => {
+  const handleSearch = (value) => {
+    setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      newParams.set("page", "1");
+      newParams.set("search", value);
+      newParams.set("page", "1"); // وقتی سرچ می‌کنیم حتما صفحه اول باشه
       return newParams;
     });
   };
+
+  const handleNumTable = (value) => {
+    setPageSize(value);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", "1"); // وقتی تعداد سطر تغییر کرد، صفحه اول بشه
+      return newParams;
+    });
+  };
+
+  const handlePageChange = (p) => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", String(p));
+      return newParams;
+    });
+  };
+
   const rowNumberCol = {
     title: "ردیف",
-    dataIndex: "row",
-    render: (_: any, __: any, index: number) =>
-      index + 1 + (page - 1) * pageSize,
+    dataIndex: "__rowNumber",
   };
 
   const otherCols = titleNames.map((item) => ({
@@ -64,44 +60,55 @@ const TableSection: React.FC<TableSectionProps> = ({ titleNames }) => {
     dataIndex: item.key,
   }));
 
-  const handlePageChange = (p: number) => {
-    setPageParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.set("page", String(p));
-      return newParams;
-    });
-  };
-
   const columns = [rowNumberCol, ...otherCols];
 
   return (
-    <>
-      <div className="overflow-x-auto rounded-xl shadow-sm mb-4flex justify-between mb-4">
-        <table className="min-w-full text-sm text-right">
-          <TableHeader columns={columns} />
-          <TableBody columns={columns} datasource={slicedUsers} />
-        </table>
+    <div>
+      <div className="my-2 flex items-center justify-between gap-x-2">
+        <div className="flex  items-center gap-x-2">
+          <SearchBar onSearch={handleSearch} defaultValue={search} />
+          <FilterSection />
+        </div>
+        <p>تعداد کاربر:{columns.length}</p>
       </div>
-      <div className="flex items-center justify-center">
+
+      <div className="overflow-x-auto rounded-xl shadow-sm mb-4">
+        {isLoading ? (
+          <p className="text-center py-4">در حال بارگذاری...</p>
+        ) : isError ? (
+          <p className="text-center py-4 text-red-500">خطا در دریافت اطلاعات</p>
+        ) : (
+          <table className="min-w-full text-sm text-right">
+            <TableHeader columns={columns} />
+            <TableBody
+              columns={columns}
+              datasource={users}
+              page={page}
+              pageSize={pageSize}
+            />
+          </table>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center mt-4 gap-2">
         <Pagination
-          align="center"
           current={page}
-          total={datasource.length}
+          total={totalCount}
           pageSize={pageSize}
           onChange={handlePageChange}
         />
         <Select
-          value={numTable}
+          value={pageSize}
           onChange={handleNumTable}
           options={[
             { label: "5 سطر", value: 5 },
             { label: "10 سطر", value: 10 },
             { label: "15 سطر", value: 15 },
           ]}
-          className="ml-2"
+          className="w-28"
         />
       </div>
-    </>
+    </div>
   );
 };
 

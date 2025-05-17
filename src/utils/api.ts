@@ -1,6 +1,5 @@
 // useAxiosInterceptor.js
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_APP_API;
@@ -11,8 +10,6 @@ const api = axios.create({
 });
 
 export const useAxiosInterceptor = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     const resInterceptor = api.interceptors.response.use(
       (response) => response,
@@ -21,16 +18,14 @@ export const useAxiosInterceptor = () => {
 
         switch (status) {
           case 403:
-            navigate("forbidden");
+            window.location.href = "/forbidden";
             break;
           case 404:
-            navigate("/not-found");
+            window.location.href = "/not-found";
             break;
           case 500:
-            navigate("server-error");
-            break;
           case 503:
-            navigate("server-error");
+            window.location.href = "/server-error";
             break;
           case 401:
             localStorage.removeItem("access_token");
@@ -46,11 +41,10 @@ export const useAxiosInterceptor = () => {
       }
     );
 
-    // پاکسازی هنگام حذف کامپوننت
     return () => {
       api.interceptors.response.eject(resInterceptor);
     };
-  }, [navigate]);
+  }, []);
 };
 
 export default api;

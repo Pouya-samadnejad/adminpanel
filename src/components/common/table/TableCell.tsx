@@ -1,22 +1,27 @@
+import React from "react";
+import Action from "./Action";
 import StatusCell from "./cells/StatusCell";
-import TwoFactorCell from "./cells/TwoFactorCell";
 import UserTypeCell from "./cells/UserTypeCell";
-import ActionCell from "./cells/ActionCell";
 
-const TableCell = ({ column, data, rowIndex }) => {
-  const value = data[column.dataIndex];
+const TableCell = ({ column, data, rowIndex, page, pageSize }) => {
+  const { dataIndex } = column;
 
-  switch (column.dataIndex) {
+  if (dataIndex === "__rowNumber") {
+    return rowIndex + 1 + (page - 1) * pageSize;
+  }
+
+  const value = data[dataIndex];
+
+  switch (dataIndex) {
     case "status":
-      return <StatusCell value={value} />;
     case "twoFactorEnabled":
-      return <TwoFactorCell value={value} />;
+      return <StatusCell value={value} />;
     case "type":
       return <UserTypeCell value={value} />;
     case "action":
-      return <ActionCell />;
+      return <Action />;
     default:
-      return <>{value}</>;
+      return value;
   }
 };
 

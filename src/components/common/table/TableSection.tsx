@@ -5,8 +5,7 @@ import getUsers from "../../../services/allusers";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Pagination, Select } from "antd";
-import SearchBar from "./SearchBar";
-import FilterSection from "./FilterSection";
+import NavBar from "./NavBar";
 
 const TableSection = ({ titleNames }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +36,7 @@ const TableSection = ({ titleNames }) => {
     setPageSize(value);
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      newParams.set("page", "1"); // وقتی تعداد سطر تغییر کرد، صفحه اول بشه
+      newParams.set("page", "1");
       return newParams;
     });
   };
@@ -65,11 +64,8 @@ const TableSection = ({ titleNames }) => {
   return (
     <div>
       <div className="my-2 flex items-center justify-between gap-x-2">
-        <div className="flex  items-center gap-x-2">
-          <SearchBar onSearch={handleSearch} defaultValue={search} />
-          <FilterSection />
-        </div>
-        <p>تعداد کاربر:{columns.length}</p>
+        <NavBar search={search} handleSearch={handleSearch} />
+        <p>تعداد کاربر:{totalCount}</p>
       </div>
 
       <div className="overflow-x-auto rounded-xl shadow-sm mb-4">

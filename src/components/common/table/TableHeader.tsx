@@ -1,16 +1,20 @@
 import React from "react";
 
-// Define the props for TableHeader
 interface TableHeaderProps {
-  columns: any[]; // Array of column configurations
+  columns: any[];
 }
 
 const TableHeader: React.FC<TableHeaderProps> = ({ columns }) => {
   return (
-    <thead className="bg-gray-100 text-gray-700 font-semibold text-center">
+    <thead className="bg-gray-200 text-gray-700 font-semibold text-center">
       <tr>
+        <th className="p-3"></th>
         {columns.map((column, index) => (
-          <th key={index} className="p-3">
+          <th
+            key={index}
+            className={`p-3 ${column.className || ""}`}
+            style={column.style}
+          >
             {column.title}
           </th>
         ))}

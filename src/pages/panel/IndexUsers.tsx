@@ -8,16 +8,15 @@ const IndexUsers: React.FC<IndexUsersProps> = (props) => {
     <div>
       <TableSection
         titleNames={[
-          { key: "firstName", label: "نام" },
-          { key: "lastName", label: "نام خانوادگی" },
+          { key: "fullName", label: "نام و نام خانوادگی" }, // ستون ترکیبی جدید
           { key: "nationalCode", label: "کد ملی" },
-          { key: "userName", label: " نام کاربری" },
+          { key: "userName", label: "نام کاربری" },
           { key: "status", label: "وضعیت کاربران" },
           { key: "twoFactorEnabled", label: "تایید دو مرحله ای" },
           { key: "type", label: "نوع کاربر" },
           { key: "action", label: "عملیات" },
         ]}
-      />{" "}
+      />
     </div>
   );
 };

@@ -3,11 +3,15 @@ import Action from "./Action";
 import StatusCell from "./cells/StatusCell";
 import UserTypeCell from "./cells/UserTypeCell";
 
-const TableCell = ({ column, data, rowIndex, page, pageSize }) => {
+const TableCell = ({ column, data, rowIndex, page, pageSize, ActionBar }) => {
   const { dataIndex } = column;
 
   if (dataIndex === "__rowNumber") {
     return rowIndex + 1 + (page - 1) * pageSize;
+  }
+
+  if (dataIndex === "fullName") {
+    return `${data.firstName || ""} ${data.lastName || ""}`;
   }
 
   const value = data[dataIndex];
@@ -19,7 +23,7 @@ const TableCell = ({ column, data, rowIndex, page, pageSize }) => {
     case "type":
       return <UserTypeCell value={value} />;
     case "action":
-      return <Action />;
+      return <Action ActionBar={ActionBar} />;
     default:
       return value;
   }

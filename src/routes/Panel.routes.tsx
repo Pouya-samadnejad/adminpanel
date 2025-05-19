@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import PanelLayout from "../layout/PanelLayout";
 import Loading from "../components/common/Loading";
 const IndexUsers = lazy(() => import("../pages/panel/IndexUsers"));
+const Form = lazy(() => import("../components/common/Form"));
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -17,6 +18,14 @@ export const PanelRoutes = {
       element: (
         <SuspenseWrapper>
           <IndexUsers />
+        </SuspenseWrapper>
+      ),
+    },
+    {
+      path: "users/new",
+      element: (
+        <SuspenseWrapper>
+          <Form />
         </SuspenseWrapper>
       ),
     },

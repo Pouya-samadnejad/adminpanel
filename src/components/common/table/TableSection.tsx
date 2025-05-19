@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
-import getUsers from "../../../services/allusers";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Pagination, Select } from "antd";
 import NavBar from "./NavBar";
 
-const TableSection = ({ titleNames }) => {
+const TableSection = ({ titleNames, actionCol, searchBar, getApi }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Number(searchParams.get("page") || 1);
-  const search = searchParams.get("search") || "";
+  const search = searchParams.get(searchBar) || "";
   const [pageSize, setPageSize] = useState(5);
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users", page, pageSize, search],
-    queryFn: () => getUsers(page, pageSize, search).then((res) => res.data),
+    queryFn: () => getApi(page, pageSize, search),
     keepPreviousData: true,
+    select: ({ data }) => (data ? data : undefined),
   });
 
   const users = data?.items || [];
@@ -26,8 +25,8 @@ const TableSection = ({ titleNames }) => {
   const handleSearch = (value) => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      newParams.set("search", value);
-      newParams.set("page", "1"); // وقتی سرچ می‌کنیم حتما صفحه اول باشه
+      newParams.set(searchBar, value);
+      newParams.set("page", "1");
       return newParams;
     });
   };
@@ -81,6 +80,7 @@ const TableSection = ({ titleNames }) => {
               datasource={users}
               page={page}
               pageSize={pageSize}
+              actionCol={actionCol}
             />
           </table>
         )}

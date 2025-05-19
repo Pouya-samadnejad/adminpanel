@@ -6,7 +6,7 @@ import IndexSideBar from "../pages/panel/IndexSideBar";
 import UserSection from "../components/common/panel/UserSection";
 const { Content, Sider } = Layout;
 
-const PanelLayout: React.FC = () => {
+const PanelLayout: React.FC = ({ button }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const showDrawer = () => setOpen(true);
@@ -39,15 +39,17 @@ const PanelLayout: React.FC = () => {
                 <UserOutlined />
               </Button>
             </div>
-
-            <Breadcrumb
-              items={[
-                { title: "خانه" },
-                { title: "لیست" },
-                { title: "برنامه" },
-              ]}
-              style={{ margin: "16px 0" }}
-            />
+            <div className="flex items-center w-full justify-between">
+              <Breadcrumb
+                items={[
+                  { title: "خانه" },
+                  { title: "لیست" },
+                  { title: "برنامه" },
+                ]}
+                style={{ margin: "16px 0" }}
+              />
+              {button}
+            </div>
           </div>
 
           <Content

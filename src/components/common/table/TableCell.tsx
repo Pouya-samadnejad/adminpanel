@@ -1,9 +1,8 @@
 import React from "react";
-import Action from "./Action";
 import StatusCell from "./cells/StatusCell";
 import UserTypeCell from "./cells/UserTypeCell";
 
-const TableCell = ({ column, data, rowIndex, page, pageSize, ActionBar }) => {
+const TableCell = ({ column, data, rowIndex, page, pageSize, actionCol }) => {
   const { dataIndex } = column;
 
   if (dataIndex === "__rowNumber") {
@@ -11,7 +10,7 @@ const TableCell = ({ column, data, rowIndex, page, pageSize, ActionBar }) => {
   }
 
   if (dataIndex === "fullName") {
-    return `${data.firstName || ""} ${data.lastName || ""}`;
+    return `${data.firstName || ""} ${data.lastName || ""}`.trim();
   }
 
   const value = data[dataIndex];
@@ -23,7 +22,7 @@ const TableCell = ({ column, data, rowIndex, page, pageSize, ActionBar }) => {
     case "type":
       return <UserTypeCell value={value} />;
     case "action":
-      return <Action ActionBar={ActionBar} />;
+      return actionCol?.(data);
     default:
       return value;
   }

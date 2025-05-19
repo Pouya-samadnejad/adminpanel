@@ -21,11 +21,11 @@ const UserSection: React.FC = () => {
           icon={<UserOutlined />}
           src={`data:image/png;base64,${currentUser?.avatarBase64}`}
         />
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ">
           <p>{currentUser?.firstName}</p>
           <p>{currentUser?.lastName}</p>
         </div>
-        <div className="flex gap-4 justify-between items-center mt-1.5">
+        <div className="lg:flex gap-4 justify-between items-center mt-1.5 hidden">
           <button>
             <i className="fal fa-expand cursor-pointer text-xl" />
           </button>

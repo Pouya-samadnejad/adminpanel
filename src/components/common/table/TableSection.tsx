@@ -80,7 +80,10 @@ const TableSection = ({ titleNames, actionCol, searchBar, getApi }) => {
               datasource={users}
               page={page}
               pageSize={pageSize}
+              totalCount={totalCount}
               actionCol={actionCol}
+              handlePageChange={handlePageChange}
+              handleNumTable={handleNumTable}
             />
           </table>
         )}
@@ -100,6 +103,7 @@ const TableSection = ({ titleNames, actionCol, searchBar, getApi }) => {
             { label: "5 سطر", value: 5 },
             { label: "10 سطر", value: 10 },
             { label: "15 سطر", value: 15 },
+            { label: "30سطر", value: 30 },
           ]}
           className="w-28"
         />

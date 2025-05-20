@@ -6,7 +6,7 @@ interface TableHeaderProps {
 
 const TableHeader: React.FC<TableHeaderProps> = ({ columns }) => {
   return (
-    <thead className="bg-gray-200 text-gray-700 font-semibold text-center">
+    <thead className="bg-gray-200 text-gray-700 font-semibold text-center sticky top-0 z-10">
       <tr>
         <th className="p-3"></th>
         {columns.map((column, index) => (

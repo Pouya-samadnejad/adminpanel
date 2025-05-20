@@ -26,7 +26,7 @@ const PanelLayout: React.FC = ({ button }) => {
           width={200}
           breakpoint="lg"
           style={{ background: colorBgContainer }}
-          className="hidden md:block h-screen"
+          className="hidden md:block h-screen "
         >
           <UserSection />
           <IndexSideBar />

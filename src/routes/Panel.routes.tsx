@@ -30,6 +30,14 @@ export const PanelRoutes = {
       ),
     },
     {
+      path: "users/edit/:id",
+      element: (
+        <SuspenseWrapper>
+          <Form />
+        </SuspenseWrapper>
+      ),
+    },
+    {
       path: "applications",
       element: (
         <SuspenseWrapper>

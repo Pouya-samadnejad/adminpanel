@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface User {
   firstName: string;
   lastName: string;
@@ -15,9 +17,9 @@ const Action: React.FC<ActionProps> = ({ id }) => {
 
   return (
     <div className="flex items-center justify-center gap-6 text-xl">
-      <button onClick={() => handleClick("edit")}>
+      <Link to={`edit/${id}`} className="!text-stone-800">
         <i className="fal fa-edit cursor-pointer" />
-      </button>
+      </Link>
       <button onClick={() => handleClick("key")}>
         <i className="fal fa-key cursor-pointer" />
       </button>

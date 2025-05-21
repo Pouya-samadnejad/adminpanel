@@ -1,14 +1,37 @@
-import React, { useState } from "react";
-import { Form, Input, DatePicker, Radio, Upload, Drawer, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Form, Input, DatePicker, Radio, Switch, TimePicker } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Dragger from "antd/es/upload/Dragger";
+import Guid from "./Guid";
+import postUser from "../../services/postUser";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import getUser from "../../services/getUser";
+import putUser from "../../services/putUSer";
 
 const UserForm: React.FC = () => {
+  const { id } = useParams();
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Form Submitted:", values);
+  const { data } = useQuery({
+    queryKey: ["users", id],
+    queryFn: () => getUser(id),
+    select: (data) => data?.data,
+  });
+
+  const onFinish = async (values: any) => {
+    try {
+      if (id) {
+        await putUser({ ...values, id });
+      } else {
+        await postUser(values);
+        console.log(values);
+      }
+      navigate("/panel/users");
+    } catch (err) {
+      console.error("خطا در ثبت اطلاعات:", err);
+    }
   };
 
   const normFile = (e: any) => {
@@ -17,16 +40,6 @@ const UserForm: React.FC = () => {
       return e;
     }
     return e?.fileList;
-  };
-
-  const [open, setOpen] = useState(false);
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
   };
 
   const variant = Form.useWatch("variant", form);
@@ -60,6 +73,11 @@ const UserForm: React.FC = () => {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+  console.log(data);
+
+  if (data && id) {
+    form.setFieldsValue(data);
+  }
 
   return (
     <div>
@@ -72,9 +90,10 @@ const UserForm: React.FC = () => {
         className="grid grid-cols-4 gap-x-2.5 my-2"
         variant={variant || "filled"}
         noValidate
+        initialValues={data}
       >
         <Form.Item
-          name="nationalIdCode"
+          name="nationalCode"
           label="کد ملی"
           rules={[
             { required: true, message: "لطفا کد ملی را وارد کنید" },
@@ -106,7 +125,6 @@ const UserForm: React.FC = () => {
         >
           <Input allowClear size="large" />
         </Form.Item>
-
         <Form.Item
           name="lastName"
           label="نام خانوادگی"
@@ -123,9 +141,8 @@ const UserForm: React.FC = () => {
         >
           <Input allowClear size="large" />
         </Form.Item>
-
         <Form.Item
-          name="phone"
+          name="mobile"
           label="شماره تلفن"
           rules={[
             { required: true, message: "لطفا شماره تلفن خود را وارد کنید" },
@@ -152,7 +169,6 @@ const UserForm: React.FC = () => {
             placeholder="مثال: 09123456789"
           />
         </Form.Item>
-
         <Form.Item
           name="birthDate"
           label="تاریخ تولد"
@@ -169,7 +185,6 @@ const UserForm: React.FC = () => {
             placeholder="تاریخ تولد خود را وارد کنید"
           />
         </Form.Item>
-
         <Form.Item
           name="email"
           label="ایمیل"
@@ -192,17 +207,51 @@ const UserForm: React.FC = () => {
             ]}
           />
         </Form.Item>
-
         <div className="flex items-center gap-3 col-span-4 mb-10">
           <h2 className="font-bold">اطلاعات سامانه</h2>
           <div className="bg-gray-200 h-[1px] grow"></div>
         </div>
-
+        <Form.Item
+          name="status"
+          label="وضعیت"
+          rules={[{ required: true, message: "لطفا نوع کاربر را انتخاب کنید" }]}
+        >
+          <Radio.Group
+            options={[
+              { value: 0, label: "فعال" },
+              { value: 1, label: "غیرفعال" },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item
+          name="twoFactorEnabled"
+          label="ورود دو مرحله"
+          rules={[{ required: true }]}
+        >
+          <Radio.Group
+            options={[
+              { value: true, label: "فعال" },
+              { value: false, label: "غیرفعال" },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item
+          name="smsWebServiceAccess"
+          label="دسترسی به وب سرویس
+"
+          rules={[{ required: true, message: "وضعیت دسترسی خود را مشخص کنید" }]}
+        >
+          <Radio.Group
+            options={[
+              { value: true, label: "دارد" },
+              { value: false, label: "ندارد" },
+            ]}
+          />
+        </Form.Item>
         <Form.Item
           name="type"
           label="نوع کاربر"
           rules={[{ required: true, message: "لطفا نوع کاربر را انتخاب کنید" }]}
-          className="col-span-4"
         >
           <Radio.Group
             options={[
@@ -212,79 +261,79 @@ const UserForm: React.FC = () => {
             ]}
           />
         </Form.Item>
-        <div className="my-8 flex gap-1.5 items-center">
-          <h3>سمت‌ها</h3>
-          <button
-            className="bg-teal-600 text-white px-1 rounded-md"
-            onClick={showDrawer}
-            type="button"
+        <Form.Item required name="UserName" label="نام کاربری">
+          <Input type="email" className="w-full" size="large" />
+        </Form.Item>
+        <Form.Item name="estelam" label="استعلام ثبت احوال">
+          <Input type="email" disabled className="w-full" size="large" />
+        </Form.Item>
+        <Form.Item name="shakar" label="استعلام شاهکار">
+          <Input disabled type="email" className="w-full" size="large" />
+        </Form.Item>
+        {!id && (
+          <Form.Item
+            name="password"
+            label="رمز عبور"
+            rules={[
+              {
+                required: true,
+                message: "لطفاً رمز عبور را وارد کنید",
+              },
+              {
+                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                message:
+                  "رمز باید لاتین و شامل حروف کوچک، بزرگ، نماد و حداقل ۸ کاراکتر باشد",
+              },
+            ]}
+            hasFeedback
           >
-            راهنما
-          </button>
-          <Drawer
-            width="30%"
-            title="راهنما"
-            closable={{ "aria-label": "Close Button" }}
-            closable={false}
-            open={open}
-            placement="left"
-            extra={
-              <Button
-                type="text"
-                onClick={onClose}
-                icon={<i className="fal fa-x"></i>} // آیکون دکمه بسته شدن
-                style={{
-                  marginLeft: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              />
-            }
-          >
-            <section className="p-4">
-              <li className="mt-2 mb-5 w-full flex flex-col justify-center items-center text-teal-700">
-                <span className="relative inline-block w-fit">
-                  <i className="fal fa-layer-group text-6xl"></i>
-                  <i className="fal fa-user-vneck text-3xl absolute -bottom-1 -right-1 bg-white rounded-full p-0.5"></i>
-                </span>
-
-                <strong className="text-info">سمــت کـــــاربر</strong>
-              </li>
-              <h2 className="text-xl font-bold mb-4">سمت در چارت سازمانی</h2>
-              <ul className="list-disc pr-6 space-y-2 text-right">
-                <li>
-                  منظور از سمت، موقعیت کاربر در چارت سازمانی است، مانند مدیرکل،
-                  مدیرعامل، کارشناس، معاون مالی و ...
-                </li>
-                <li>
-                  سمت‌ها در بخش مدیریت درختواره قابل تعریف و ویرایش هستند.
-                </li>
-                <li>
-                  با تعیین سمت کاربر، می‌توانید موقعیت او را در گراف و درخت
-                  سازمانی مشاهده کنید.
-                </li>
-                <li>
-                  با ثبت سمت، امکان دسترسی به سامانه بر اساس نقش کاربر فراهم
-                  می‌شود.
-                </li>
-                <li>
-                  در قسمت مدیریت سمت‌ها، می‌توانید کاربر مورد نظر را به سمت
-                  دلخواه متصل کنید.
-                </li>
-              </ul>
-            </section>
-          </Drawer>
-        </div>
+            <Input.Password
+              placeholder="رمز عبور را وارد کنید"
+              size="large"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+        )}
+        {id && <div></div>}
+        <Form.Item name="allowedLoginIPs" label="تعیین نوع ساعات محدودیت ورود">
+          <Switch
+            size="default"
+            checkedChildren="عدم مجاز به ورود در ساعات معین"
+            unCheckedChildren="مجاز به ورود در ساعات معین"
+            defaultChecked
+          />
+          <p className="mt-2 text-[12px]">
+            IP های مجاز ورود (مثال:192.168.1.166)
+          </p>
+        </Form.Item>
+        <Form.Item name="allowedLoginStartTime" label="ساعت غیر مجاز اغاز ورود">
+          <TimePicker
+            variant="filled"
+            placeholder="لطفا زمان خود را انتخاب کنید"
+            size="large"
+            className="w-full"
+          />
+        </Form.Item>
+        <Form.Item name="allowedLoginEndTime" label="ساعت غیر مجاز پایان ورود">
+          <TimePicker
+            variant="filled"
+            placeholder="لطفا زمان خود را انتخاب کنید"
+            size="large"
+            className="w-full"
+          />
+        </Form.Item>
+        <Guid />
         <div className="flex items-center gap-3 col-span-4 mb-10">
           <h2 className="font-bold">تصاویر</h2>
           <div className="bg-gray-200 h-[1px] grow"></div>
         </div>
-
         <Form.Item
-          name="dragger"
+          name="AvatarFile"
           valuePropName="fileList"
           getValueFromEvent={normFile}
-          className="col-span-4"
+          className="col-span-2"
           rules={[{ required: false, message: "لطفا یک فایل آپلود کنید" }]}
         >
           <Dragger
@@ -307,7 +356,34 @@ const UserForm: React.FC = () => {
             <p className="ant-upload-hint">حداکثر حجم فایل 320 KB</p>
           </Dragger>
         </Form.Item>
-        <div className="flex items-center justify-end col-span-4 gap-2 fixed bottom-0 left-0 p-4 bg-white w-full shadow-2xl">
+        <Form.Item
+          name="avatarFile"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          className="col-span-2"
+          rules={[{ required: false, message: "لطفا یک فایل آپلود کنید" }]}
+        >
+          <Dragger
+            {...props}
+            beforeUpload={beforeUpload}
+            name="files"
+            showUploadList={true}
+            accept=".png,.jpg"
+            maxCount={3}
+            className="w-full "
+            style={{ width: "100%" }}
+          >
+            <p className="ant-upload-drag-icon">
+              <i className="fal fa-cloud-upload-alt text-6xl text-gray-500"></i>
+            </p>
+            <p className="ant-upload-text">
+              به منظور بارگذاری کلیک و یا فایل خود را در محدوده رها کنید
+            </p>
+            <p className="ant-upload-hint">پسوند‌های مجاز .png,.jpg</p>
+            <p className="ant-upload-hint">حداکثر حجم فایل 320 KB</p>
+          </Dragger>
+        </Form.Item>
+        <div className="flex items-center justify-end col-span-4 gap-2 fixed bottom-0 left-0 p-3 bg-white w-full shadow-2xl">
           <button
             className="bg-gray-200 text-gray-600 px-4 py-3 rounded-[12px] hover:bg-gray-300 transition-all duration-200 cursor-pointer"
             onClick={() => {

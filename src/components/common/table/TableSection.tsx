@@ -59,22 +59,24 @@ const TableSection = ({ titleNames, actionCol, searchBar, getApi }) => {
   }));
 
   const columns = [rowNumberCol, ...otherCols];
+  if (isError)
+    return (
+      <p className="text-center py-4 text-red-500">خطا در دریافت اطلاعات</p>
+    );
 
   return (
     <div>
-      <div className="my-2 flex items-center justify-between gap-x-2">
-        <NavBar search={search} handleSearch={handleSearch} />
-        <p>تعداد کاربر:{totalCount}</p>
-      </div>
-
-      <div className="overflow-x-auto rounded-xl shadow-sm mb-4">
-        {isLoading ? (
-          <p className="text-center py-4">در حال بارگذاری...</p>
-        ) : isError ? (
-          <p className="text-center py-4 text-red-500">خطا در دریافت اطلاعات</p>
-        ) : (
-          <table className="min-w-full text-sm text-right">
-            <TableHeader columns={columns} />
+      <div>
+        <div className="w-full ">
+          <NavBar
+            search={search}
+            handleSearch={handleSearch}
+            totalCount={totalCount}
+          />
+        </div>
+        <div className="overflow-x-auto rounded-2xl shadow-sm mb-4">
+          <table className="min-w-full text-sm text-right shadow-md">
+            <TableHeader columns={titleNames} />
             <TableBody
               columns={columns}
               datasource={users}
@@ -86,7 +88,7 @@ const TableSection = ({ titleNames, actionCol, searchBar, getApi }) => {
               handleNumTable={handleNumTable}
             />
           </table>
-        )}
+        </div>
       </div>
 
       <div className="flex items-center justify-center mt-4 gap-2">

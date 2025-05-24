@@ -4,6 +4,7 @@ import Action from "../../components/common/table/Action";
 import { getUsers } from "../../services/allusers";
 import Nav from "../../components/common/Nav";
 import { Link } from "react-router-dom";
+import PageActionPortal from "../../components/common/PageActionPortal";
 
 interface IndexUsersProps {}
 const titles = [
@@ -19,13 +20,15 @@ const titles = [
 const IndexUsers: React.FC<IndexUsersProps> = () => {
   return (
     <div>
-      <Nav>
-        <div className="bg-sky-600 text-white px-6 py-2  rounded-[12px] hover:bg-sky-700 transition-all duration-200 cursor-pointer">
-          <Link to="new" className="!text-white">
+      <PageActionPortal>
+        <div className="bg-sky-700 rounded-xl px-4 py-2 hover:bg-sky-800 transition-all duration-200">
+          <Link to="new" className="!text-white flex items-center gap-2">
+            <i className="fal fa-user-plus"></i>
             افزودن کاربر
           </Link>
         </div>
-      </Nav>
+      </PageActionPortal>
+
       <TableSection
         titleNames={titles}
         actionCol={(row) => <Action id={row.id} />}

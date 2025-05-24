@@ -32,6 +32,7 @@ const PanelLayout: React.FC = ({ button }) => {
             right: 0,
             top: 0,
             overflowY: "auto",
+            zIndex: 30,
           }}
           className="hidden md:block sidebar-scrollbar-left"
         >
@@ -65,7 +66,7 @@ const PanelLayout: React.FC = ({ button }) => {
           </div>
 
           <Content
-            className="h-screen"
+            className="min-h-screen"
             style={{
               padding: 24,
               margin: 0,

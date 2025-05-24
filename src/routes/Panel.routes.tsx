@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import PanelLayout from "../layout/PanelLayout";
 import Loading from "../components/common/Loading";
 const IndexUsers = lazy(() => import("../pages/panel/IndexUsers"));
-const Form = lazy(() => import("../components/common/Form"));
+const Form = lazy(() => import("../pages/panel/form/Form"));
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {

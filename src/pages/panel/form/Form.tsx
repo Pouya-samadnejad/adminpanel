@@ -3,14 +3,17 @@ import { Form, Input, DatePicker, Radio, Switch, TimePicker } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Dragger from "antd/es/upload/Dragger";
-import Guid from "./Guid";
-import postUser from "../../services/postUser";
+import Guid from "../../../components/common/Guid";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import getUser from "../../services/getUser";
-import putUser from "../../services/putUSer";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import getUser from "../../../services/getUser";
+import AddInput from "./AddInput";
+import toast from "react-hot-toast";
+import { postUsers, putUsers } from "../../../services/allusers";
 
 const UserForm: React.FC = () => {
+  const formData = new FormData();
+
   const { id } = useParams();
   const [form] = Form.useForm();
 
@@ -20,18 +23,49 @@ const UserForm: React.FC = () => {
     select: (data) => data?.data,
   });
 
-  const onFinish = async (values: any) => {
-    try {
-      if (id) {
-        await putUser({ ...values, id });
-      } else {
-        await postUser(values);
-        console.log(values);
-      }
-      navigate("/panel/users");
-    } catch (err) {
-      console.error("خطا در ثبت اطلاعات:", err);
+  const addUser = useMutation({
+    mutationFn: postUsers,
+    onSuccess: (data) => {
+      toast.success(data.message || "کاربر با موفقیت افزوده شد");
+      navigate(-1);
+    },
+    onError: (error) => {
+      const err =
+        error.response?.data?.message || error.message || "مشکلی پیش آمده";
+      toast.error(err);
+    },
+  });
+
+  const editUser = useMutation({
+    mutationFn: putUsers,
+    onSuccess: (data) => {
+      toast.success(data.message || "کاربر با موفقیت ویرایش شد");
+      navigate(-1);
+    },
+    onError: (error) => {
+      const err =
+        error.response?.data?.message || error.message || "مشکلی پیش آمده";
+
+      toast.error(err);
+    },
+  });
+
+  const onFinish = async (values) => {
+    if (id && data) {
+      values.id = id;
     }
+
+    Object.entries(values).forEach(([key, val]) => {
+      // اگر مقدار تاریخ هست و dayjs یا moment، تبدیل به string کن
+      if (val?.format && typeof val.format === "function") {
+        formData.append(key, val.format("YYYY-MM-DD"));
+      } else if (val !== undefined && val !== null) {
+        formData.append(key, val);
+      }
+    });
+    if (id && data) {
+      editUser.mutate(formData);
+    } else addUser.mutate(formData);
   };
 
   const normFile = (e: any) => {
@@ -110,6 +144,7 @@ const UserForm: React.FC = () => {
             inputMode="numeric"
             pattern="[0-9]*"
             showCount
+            disabled={!!id}
             onBeforeInput={(e) => {
               if (!/^\d*$/.test(e.data)) {
                 e.preventDefault();
@@ -218,8 +253,8 @@ const UserForm: React.FC = () => {
         >
           <Radio.Group
             options={[
-              { value: 0, label: "فعال" },
-              { value: 1, label: "غیرفعال" },
+              { value: 1, label: "فعال" },
+              { value: 0, label: "غیرفعال" },
             ]}
           />
         </Form.Item>
@@ -255,8 +290,8 @@ const UserForm: React.FC = () => {
         >
           <Radio.Group
             options={[
-              { value: 0, label: "شهروند" },
-              { value: 1, label: "سازمانی" },
+              { value: 0, label: "سازمانی" },
+              { value: 1, label: "شهروند" },
               { value: 2, label: "LDAP" },
             ]}
           />
@@ -270,7 +305,7 @@ const UserForm: React.FC = () => {
         <Form.Item name="shakar" label="استعلام شاهکار">
           <Input disabled type="email" className="w-full" size="large" />
         </Form.Item>
-        {!id && (
+        {!id ? (
           <Form.Item
             name="password"
             label="رمز عبور"
@@ -295,8 +330,9 @@ const UserForm: React.FC = () => {
               }
             />
           </Form.Item>
+        ) : (
+          <div></div>
         )}
-        {id && <div></div>}
         <Form.Item name="allowedLoginIPs" label="تعیین نوع ساعات محدودیت ورود">
           <Switch
             size="default"
@@ -307,6 +343,7 @@ const UserForm: React.FC = () => {
           <p className="mt-2 text-[12px]">
             IP های مجاز ورود (مثال:192.168.1.166)
           </p>
+          <AddInput />
         </Form.Item>
         <Form.Item name="allowedLoginStartTime" label="ساعت غیر مجاز اغاز ورود">
           <TimePicker
@@ -383,9 +420,9 @@ const UserForm: React.FC = () => {
             <p className="ant-upload-hint">حداکثر حجم فایل 320 KB</p>
           </Dragger>
         </Form.Item>
-        <div className="flex items-center justify-end col-span-4 gap-2 fixed bottom-0 left-0 p-3 bg-white w-full shadow-2xl">
+        <div className="flex items-center justify-end col-span-4 gap-2 fixed bottom-0 left-0 p-2 bg-white w-full shadow-2xl">
           <button
-            className="bg-gray-200 text-gray-600 px-4 py-3 rounded-[12px] hover:bg-gray-300 transition-all duration-200 cursor-pointer"
+            className="bg-gray-200 text-gray-600 px-4 py-2 rounded-[12px] hover:bg-gray-300 transition-all duration-200 cursor-pointer"
             onClick={() => {
               navigate(-1);
             }}
@@ -394,7 +431,7 @@ const UserForm: React.FC = () => {
           </button>
           <button
             type="submit"
-            className="bg-sky-600 text-white px-12 py-3  rounded-[12px] hover:bg-sky-700 transition-all duration-200 cursor-pointer"
+            className="bg-sky-600 text-white px-12 py-2  rounded-[12px] hover:bg-sky-700 transition-all duration-200 cursor-pointer"
           >
             ثبت و ذخیره
           </button>

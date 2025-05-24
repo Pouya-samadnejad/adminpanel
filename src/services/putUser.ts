@@ -1,19 +1,16 @@
 import api from "../utils/api";
 
-const putUser = async (value) => {
+const putUser = async (values) => {
   const formData = new FormData();
 
-  formData.append("Id", value.id);
-  formData.append("FirstName", value.firstName);
-  formData.append("LastName", value.lastName);
-  formData.append("FatherName", value.fatherName);
-  formData.append("Gender", value.gender);
-  formData.append("Email", value.email);
-  formData.append("Mobile", value.mobile);
-  formData.append("NationalCode", value.nationalCode);
-  formData.append("BirthDate", value.birthDate);
-  formData.append("password", value.password);
-  formData.append("UserName", value.userName);
+  Object.entries(values).forEach(([key, val]) => {
+    if (val?.format && typeof val.format === "function") {
+      // تبدیل dayjs به رشته تاریخ
+      formData.append(key, val.format("YYYY-MM-DD"));
+    } else if (val !== undefined && val !== null) {
+      formData.append(key, val);
+    }
+  });
 
   try {
     const response = await api.put("/v1/User", formData, {
@@ -27,4 +24,5 @@ const putUser = async (value) => {
     console.error("خطا در ارسال داده‌ها:", error);
   }
 };
+
 export default putUser;

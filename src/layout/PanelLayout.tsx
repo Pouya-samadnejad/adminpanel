@@ -8,7 +8,7 @@ import RouteBasedBreadcrumb from "../components/common/RouteBasedBreadcrumb";
 
 const { Content, Sider } = Layout;
 
-const PanelLayout: React.FC = ({ button }) => {
+const PanelLayout: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const showDrawer = () => setOpen(true);

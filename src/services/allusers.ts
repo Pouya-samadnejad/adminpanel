@@ -23,18 +23,26 @@ const postUsers = (userData) => {
 const putUsers = (userData) => {
   return new Promise((resolve, reject) => {
     api
-      .put(`/v1/User/`, userData)
+      .put(`/v1/User`, userData)
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
 };
 
-const deleteUser = (userData) => {
+const deleteUser = (userId) => {
   return new Promise((resolve, reject) => {
     api
-      .delete(`/v1/User/`, userData)
+      .delete("/v1/User", {
+        data: { userId },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err));
+      .catch((err) => {
+        console.error("خطا در حذف کاربر:", err);
+        reject(err);
+      });
   });
 };
 

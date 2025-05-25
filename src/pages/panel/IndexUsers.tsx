@@ -30,7 +30,7 @@ const IndexUsers: React.FC<IndexUsersProps> = () => {
 
       <TableSection
         titleNames={titles}
-        actionCol={(row) => <Action id={row.id} />}
+        actionCol={(row) => <Action user={row} />}
         getApi={getUsers}
         searchBar="name"
       />

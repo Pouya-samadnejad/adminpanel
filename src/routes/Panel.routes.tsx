@@ -12,30 +12,39 @@ const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
 export const PanelRoutes = {
   path: "/panel",
   element: <PanelLayout />,
+  handle: { breadcrumb: "داشبورد" }, // <- اگه خواستی
   children: [
     {
       path: "users",
-      element: (
-        <SuspenseWrapper>
-          <IndexUsers />
-        </SuspenseWrapper>
-      ),
-    },
-    {
-      path: "users/new",
-      element: (
-        <SuspenseWrapper>
-          <Form />
-        </SuspenseWrapper>
-      ),
-    },
-    {
-      path: "users/edit/:id",
-      element: (
-        <SuspenseWrapper>
-          <Form />
-        </SuspenseWrapper>
-      ),
+      handle: { breadcrumb: "کاربران" },
+      children: [
+        {
+          index: true,
+          element: (
+            <SuspenseWrapper>
+              <IndexUsers />
+            </SuspenseWrapper>
+          ),
+        },
+        {
+          path: "new",
+          element: (
+            <SuspenseWrapper>
+              <Form />
+            </SuspenseWrapper>
+          ),
+          handle: { breadcrumb: "افزودن کاربر" },
+        },
+        {
+          path: "edit/:id",
+          element: (
+            <SuspenseWrapper>
+              <Form />
+            </SuspenseWrapper>
+          ),
+          handle: { breadcrumb: "ویرایش کاربر" },
+        },
+      ],
     },
     {
       path: "applications",
@@ -44,14 +53,16 @@ export const PanelRoutes = {
           <div>سامانه ها</div>
         </SuspenseWrapper>
       ),
+      handle: { breadcrumb: "سامانه‌ها" },
     },
     {
       path: "loginLogs",
       element: (
         <SuspenseWrapper>
-          <div>نشست ها</div>
+          <div>نشست‌ها</div>
         </SuspenseWrapper>
       ),
+      handle: { breadcrumb: "نشست‌ها" },
     },
   ],
 };

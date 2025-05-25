@@ -1,6 +1,7 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
+import RouteBasedBreadcrumb from "../components/common/RouteBasedBreadcrumb";
 const { Header, Content, Footer } = Layout;
 
 const items = [
@@ -29,11 +30,7 @@ const LandingLayout: React.FC = () => {
         />
       </Header>
       <Content style={{ padding: "0 48px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item>خانه</Breadcrumb.Item>
-          <Breadcrumb.Item>لیست</Breadcrumb.Item>
-          <Breadcrumb.Item>اپ</Breadcrumb.Item>
-        </Breadcrumb>
+        <RouteBasedBreadcrumb />
         <div
           style={{
             background: colorBgContainer,

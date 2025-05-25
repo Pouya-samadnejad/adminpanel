@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 interface User {
@@ -14,7 +15,7 @@ const Action: React.FC<ActionProps> = ({ id }) => {
   const handleClick = (action: string) => {
     alert(`کاربر: ${id} | اکشن: ${action}`);
   };
-
+const deleteUser = useMutation
   return (
     <div className="flex items-center justify-center gap-6 text-xl">
       <Link to={`edit/${id}`} className="!text-stone-800">

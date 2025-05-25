@@ -2,7 +2,6 @@ import React from "react";
 import TableSection from "../../components/common/table/TableSection";
 import Action from "../../components/common/table/Action";
 import { getUsers } from "../../services/allusers";
-import Nav from "../../components/common/Nav";
 import { Link } from "react-router-dom";
 import PageActionPortal from "../../components/common/PageActionPortal";
 

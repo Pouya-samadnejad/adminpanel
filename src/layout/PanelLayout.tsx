@@ -1,28 +1,15 @@
 import React, { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Drawer, Layout, theme } from "antd";
+import { Button, Drawer, Layout, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import IndexSideBar from "../pages/panel/IndexSideBar";
 import UserSection from "../components/common/panel/UserSection";
-import { useLocation } from "react-router-dom";
+import RouteBasedBreadcrumb from "../components/common/RouteBasedBreadcrumb";
 
 const { Content, Sider } = Layout;
 
 const PanelLayout: React.FC = ({ button }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const location = useLocation();
-  const pathSnippets = location.pathname.split("/").filter((i) => i);
-  const breadcrumbItems = [
-    { title: "خانه", href: "/" },
-    ...pathSnippets.map((_, index) => {
-      const url = "/" + pathSnippets.slice(0, index + 1).join("/");
-      const title = decodeURIComponent(pathSnippets[index]); // یا یک map دلخواه برای ترجمه
-      return {
-        title,
-        href: url,
-      };
-    }),
-  ];
 
   const showDrawer = () => setOpen(true);
   const onClose = () => setOpen(false);
@@ -68,12 +55,7 @@ const PanelLayout: React.FC = ({ button }) => {
               </Button>
             </div>
             <div className="flex items-center w-full justify-between">
-              <Breadcrumb
-                items={breadcrumbItems.map((item) => ({
-                  title: <a href={item.href}>{item.title}</a>,
-                }))}
-                style={{ margin: "16px 0" }}
-              />
+              <RouteBasedBreadcrumb />
               <div id="buttonHolder" />
             </div>
           </div>

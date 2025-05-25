@@ -16,7 +16,6 @@ const TableBody = ({ columns, datasource, page, pageSize, actionCol }) => {
         return (
           <React.Fragment key={data.id}>
             <tr className="even:bg-gray-100 odd:bg-white hover:bg-gray-50 transition text-center cursor-pointer">
-              {/* ستون آیکون اکسپند */}
               <td
                 className="p-3 select-none w-1 text-center"
                 onClick={() => toggleExpand(data.id)}

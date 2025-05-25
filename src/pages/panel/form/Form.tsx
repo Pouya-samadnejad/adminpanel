@@ -1,8 +1,14 @@
-import React from "react";
-import { Form, Input, DatePicker, Radio, Switch, TimePicker } from "antd";
+import {
+  Form,
+  Input,
+  DatePicker,
+  Radio,
+  Switch,
+  TimePicker,
+  Upload,
+} from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import Dragger from "antd/es/upload/Dragger";
 import Guid from "../../../components/common/Guid";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -10,13 +16,12 @@ import getUser from "../../../services/getUser";
 import AddInput from "./AddInput";
 import toast from "react-hot-toast";
 import { postUsers, putUsers } from "../../../services/allusers";
-
-const UserForm: React.FC = () => {
+import { useEffect } from "react";
+const UserForm: React.FC<{ title: string }> = () => {
   const formData = new FormData();
 
   const { id } = useParams();
   const [form] = Form.useForm();
-
   const { data } = useQuery({
     queryKey: ["users", id],
     queryFn: () => getUser(id),
@@ -56,62 +61,55 @@ const UserForm: React.FC = () => {
     }
 
     Object.entries(values).forEach(([key, val]) => {
-      // اگر مقدار تاریخ هست و dayjs یا moment، تبدیل به string کن
       if (val?.format && typeof val.format === "function") {
         formData.append(key, val.format("YYYY-MM-DD"));
+      } else if (Array.isArray(val) && val[0]?.originFileObj instanceof File) {
+        formData.append(key, val[0].originFileObj);
+      } else if (val instanceof File) {
+        formData.append(key, val);
       } else if (val !== undefined && val !== null) {
         formData.append(key, val);
       }
     });
+
     if (id && data) {
       editUser.mutate(formData);
     } else addUser.mutate(formData);
   };
 
-  const normFile = (e: any) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
-
   const variant = Form.useWatch("variant", form);
   const navigate = useNavigate();
-  const beforeUpload = (file: File) => {
-    const maxSize = 320 * 1024; // 320KB
-    if (file.size > maxSize) {
-      message.error(
-        `${file.name} بیش از 320 کیلوبایت است و نمی‌تواند آپلود شود.`
-      );
-      return false; // جلوگیری از آپلود فایل
-    }
-    return true;
-  };
-  const props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-  };
-  console.log(data);
 
   if (data && id) {
     form.setFieldsValue(data);
   }
+  useEffect(() => {
+    if (data && id) {
+      form.setFieldsValue({
+        ...data,
+        AvatarFileStream: data.avatarBase64
+          ? [
+              {
+                uid: "-1",
+                name: "avatar.png",
+                status: "done",
+                url: data.avatarBase64.startsWith("data:image")
+                  ? data.avatarBase64
+                  : `data:image/png;base64,${data.avatarBase64}`,
+              },
+            ]
+          : [],
+      });
+    }
+  }, [data, id]);
+
+  function nationalHandle(e) {
+    form.setFieldValue("UserName", e.target.value);
+  }
+  0;
+  const uploadHandler = (e) => {
+    form.setFieldValue(id ? "AvatarFileStream" : "AvatarFile", e.fileList);
+  };
 
   return (
     <div>
@@ -150,6 +148,7 @@ const UserForm: React.FC = () => {
                 e.preventDefault();
               }
             }}
+            onChange={nationalHandle}
             size="large"
           />
         </Form.Item>
@@ -297,7 +296,7 @@ const UserForm: React.FC = () => {
           />
         </Form.Item>
         <Form.Item required name="UserName" label="نام کاربری">
-          <Input type="email" className="w-full" size="large" />
+          <Input type="email" className="w-full" size="large" disabled />
         </Form.Item>
         <Form.Item name="estelam" label="استعلام ثبت احوال">
           <Input type="email" disabled className="w-full" size="large" />
@@ -367,59 +366,38 @@ const UserForm: React.FC = () => {
           <div className="bg-gray-200 h-[1px] grow"></div>
         </div>
         <Form.Item
-          name="AvatarFile"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
+          label="تصویر کاربر"
+          name={id ? "AvatarFileStream" : "AvatarFile"}
           className="col-span-2"
-          rules={[{ required: false, message: "لطفا یک فایل آپلود کنید" }]}
+          valuePropName="fileList"
+          getValueFromEvent={(e) => e && e.fileList}
         >
-          <Dragger
-            {...props}
-            beforeUpload={beforeUpload}
-            name="files"
-            showUploadList={true}
-            accept=".png,.jpg"
-            maxCount={3}
-            className="w-full "
-            style={{ width: "100%" }}
+          <Upload.Dragger
+            name="file"
+            multiple={false}
+            maxCount={1}
+            accept=".png,.jpg,.jpeg"
+            listType="picture"
+            beforeUpload={() => false}
+            showUploadList={{
+              showPreviewIcon: false,
+              showDownloadIcon: false,
+              showRemoveIcon: true,
+            }}
+            onChange={uploadHandler}
           >
             <p className="ant-upload-drag-icon">
-              <i className="fal fa-cloud-upload-alt text-6xl text-gray-500"></i>
+              <i className="fal fa-cloud-upload text-4xl"></i>
             </p>
             <p className="ant-upload-text">
-              به منظور بارگذاری کلیک و یا فایل خود را در محدوده رها کنید
+              برای بارگذاری، کلیک کنید یا تصویر خود را در اینجا رها کنید
             </p>
-            <p className="ant-upload-hint">پسوند‌های مجاز .png,.jpg</p>
-            <p className="ant-upload-hint">حداکثر حجم فایل 320 KB</p>
-          </Dragger>
+            <p className="ant-upload-hint text-sm text-gray-500">
+              فقط تصاویر PNG یا JPEG با حداکثر حجم ۳۷۴ کیلوبایت مجاز هستند.
+            </p>
+          </Upload.Dragger>
         </Form.Item>
-        <Form.Item
-          name="avatarFile"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          className="col-span-2"
-          rules={[{ required: false, message: "لطفا یک فایل آپلود کنید" }]}
-        >
-          <Dragger
-            {...props}
-            beforeUpload={beforeUpload}
-            name="files"
-            showUploadList={true}
-            accept=".png,.jpg"
-            maxCount={3}
-            className="w-full "
-            style={{ width: "100%" }}
-          >
-            <p className="ant-upload-drag-icon">
-              <i className="fal fa-cloud-upload-alt text-6xl text-gray-500"></i>
-            </p>
-            <p className="ant-upload-text">
-              به منظور بارگذاری کلیک و یا فایل خود را در محدوده رها کنید
-            </p>
-            <p className="ant-upload-hint">پسوند‌های مجاز .png,.jpg</p>
-            <p className="ant-upload-hint">حداکثر حجم فایل 320 KB</p>
-          </Dragger>
-        </Form.Item>
+
         <div className="flex items-center justify-end col-span-4 gap-2 fixed bottom-0 left-0 p-2 bg-white w-full shadow-2xl">
           <button
             className="bg-gray-200 text-gray-600 px-4 py-2 rounded-[12px] hover:bg-gray-300 transition-all duration-200 cursor-pointer"

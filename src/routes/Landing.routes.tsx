@@ -21,6 +21,7 @@ export const Landingroutes = {
           <Form />
         </SuspenseWrapper>
       ),
+      handle: { breadcrumb: "خانه" },
     },
   ],
 };

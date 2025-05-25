@@ -29,4 +29,13 @@ const putUsers = (userData) => {
   });
 };
 
-export { getUsers, postUsers, putUsers };
+const deleteUser = (userData) => {
+  return new Promise((resolve, reject) => {
+    api
+      .delete(`/v1/User/`, userData)
+      .then((res) => resolve(res.data))
+      .catch((err) => reject(err));
+  });
+};
+
+export { getUsers, postUsers, putUsers, deleteUser };

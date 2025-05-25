@@ -26,7 +26,7 @@ interface indexSideBarProps {}
 const IndexSideBar: React.FC<indexSideBarProps> = () => {
   const navigate = useNavigate();
   const clickhandler = (e) => {
-    navigate(`/panel/${e.key}`);
+    navigate(`/${e.key}`);
   };
 
   return (

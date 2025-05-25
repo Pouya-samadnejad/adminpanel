@@ -3,6 +3,7 @@ import PanelLayout from "../layout/PanelLayout";
 import Loading from "../components/common/Loading";
 const IndexUsers = lazy(() => import("../pages/panel/IndexUsers"));
 const Form = lazy(() => import("../pages/panel/form/Form"));
+const IndexDashboard = lazy(() => import("../pages/panel/IndexDashboard"));
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -10,10 +11,18 @@ const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const PanelRoutes = {
-  path: "/panel",
+  path: "/",
   element: <PanelLayout />,
-  handle: { breadcrumb: "داشبورد" }, // <- اگه خواستی
+  handle: { breadcrumb: "داشبورد" },
   children: [
+    {
+      index: true,
+      element: (
+        <SuspenseWrapper>
+          <IndexDashboard />
+        </SuspenseWrapper>
+      ),
+    },
     {
       path: "users",
       handle: { breadcrumb: "کاربران" },

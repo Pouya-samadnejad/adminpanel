@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TableCell from "./TableCell";
 
-const TableBody = ({ columns, datasource, page, pageSize }) => {
+const TableBody = ({ columns, datasource, page, pageSize, actionCol }) => {
   const [expandedRow, setExpandedRow] = useState(null);
 
   const toggleExpand = (id) => {
@@ -15,12 +15,11 @@ const TableBody = ({ columns, datasource, page, pageSize }) => {
 
         return (
           <React.Fragment key={data.id}>
-            <tr
-              className="even:bg-gray-100 odd:bg-white hover:bg-gray-50 transition text-center cursor-pointer"
-              onClick={() => toggleExpand(data.id)}
-            >
-              {/* ستون آیکون اکسپند */}
-              <td className="p-3 select-none w-1 text-center">
+            <tr className="even:bg-gray-100 odd:bg-white hover:bg-gray-50 transition text-center cursor-pointer">
+              <td
+                className="p-3 select-none w-1 text-center"
+                onClick={() => toggleExpand(data.id)}
+              >
                 <i
                   className={`fal ${
                     isExpanded ? "fa-chevron-up" : "fa-chevron-down"
@@ -36,6 +35,7 @@ const TableBody = ({ columns, datasource, page, pageSize }) => {
                     rowIndex={rowIndex}
                     page={page}
                     pageSize={pageSize}
+                    actionCol={actionCol}
                   />
                 </td>
               ))}

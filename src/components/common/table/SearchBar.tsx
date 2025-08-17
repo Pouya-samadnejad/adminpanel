@@ -11,7 +11,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [value, setValue] = useState(defaultValue);
 
-  // اگر prop پیش‌فرض تغییر کنه (مثلاً وقتی از URL میاد)، مقدار محلی هم آپدیت بشه
   useEffect(() => {
     setValue(defaultValue);
   }, [defaultValue]);
@@ -27,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="flex items-center max-w-md mx-auto bg-gray-100 rounded-xl overflow-hidden">
+    <div className=" items-center max-w-md bg-gray-100 rounded-xl overflow-hidden">
       <input
         type="text"
         className="flex-grow px-4 py-2 text-gray-700 focus:outline-none"

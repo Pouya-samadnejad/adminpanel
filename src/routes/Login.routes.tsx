@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import Loading from "../components/common/Loading";
 import LoginLayout from "../layout/LoginLayout";
-const Form = lazy(() => import("../components/common/Form"));
+const Form = lazy(() => import("../pages/panel/form/Form"));
 
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
